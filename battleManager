@@ -1,0 +1,70 @@
+function solve (input){
+    let obj = {}
+
+    for (let line of input){
+        line = line.split(":")
+        let cmd = line[0]
+        if (cmd==="Add"){
+            let name=line[1]
+            let currentHealth = Number(line[2])
+                let currentEnergy = Number(line[3])
+            if(!obj.hasOwnProperty(name)){
+                obj[name]= {health: currentHealth, energy: currentEnergy}
+            } else {
+                obj[name].health+=currentHealth;
+               // obj[name].energy+=currentEnergy
+            }
+        } else if (cmd==="Attack"){
+            let attackerName= line[1]
+            let defenderName = line[2]
+            let damage = Number(line[3])
+            if(obj.hasOwnProperty(attackerName)&& obj.hasOwnProperty(defenderName)){
+                obj[defenderName].health-=damage;
+                obj[attackerName].energy-=1
+                if (obj[defenderName].health<=0){
+                    console.log(`${defenderName} was disqualified!`);
+                    delete obj[defenderName]
+                    
+                } 
+                if(obj[attackerName].energy<=0){
+                    console.log(`${attackerName} was disqualified!`);
+                    delete obj[attackerName]
+                }
+            }
+        } else if(cmd==="Delete"){
+            let name = line[1]
+            if (name==="All"){
+                obj={}
+            } else{
+                delete obj[name]
+            }
+        }
+    }
+      let length = Object.entries(obj).length
+      console.log(`People count: ${length}`);
+      
+      let arr = Object.entries(obj).sort((a,b)=> 
+      {return b[1].health - a[1].health || a[0].localeCompare(b[0])})
+      
+      
+      
+      for (let personRecords of arr){
+          let personName = personRecords[0]
+
+          console.log(`${personName} - ${personRecords[1].health} - ${personRecords[1].energy}`);
+          
+      }
+
+}
+// solve([
+//     'Add:Bonnie:3000:5',
+//     'Add:Johny:4000:10',
+//     'Attack:Johny:Bonnie:400',
+//     'Add:Chicken:1000:1',
+//     'Add:Rabbit:3000:5',
+//     'Add:Buggy:1259:10',
+//     'Attack:Chicken:Rabbit:1000',
+//     'Results'
+//   ]
+  
+//   )
